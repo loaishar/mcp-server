@@ -26,8 +26,12 @@ logging.basicConfig(
 logger = logging.getLogger("unified-mcp")
 
 # Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv not installed, continue without it
+    pass
 
 class MCPServer:
     """Unified MCP Server that bridges multiple MCP servers."""

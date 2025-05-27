@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__playwright_navigate",
+      "mcp__puppeteer__puppeteer_navigate",
+      "Bash(bash:*)",
+      "mcp__hyperbrowser__scrape_webpage",
+      "Bash(ldd:*)",
+      "Bash(sudo apt-get:*)",
+      "Bash(sudo apt-get install:*)"
+    ],
+    "deny": []
+  }
+}

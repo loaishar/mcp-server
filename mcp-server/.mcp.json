@@ -1,13 +1,11 @@
 {
   "mcpServers": {
     "unified-mcp": {
-      "command": "C:\\Python313\\python.exe",
+      "command": "python3",
       "args": [
-        "C:\\Users\\loai1\\mcp-server\\src\\unified_mcp.py"
+        "/mnt/c/Users/loai1/OneDrive/Documents/GitHub/mcp-server/mcp-server/src/unified_mcp.py"
       ],
-      "env": {
-        "PYTHONPATH": "C:\\Users\\loai1\\AppData\\Roaming\\Python\\Python313\\site-packages"
-      },
+      "env": {},
       "description": "Unified MCP Protocol Server - Bridge to all 13 MCP servers"
     },
     "playwright-vision": {
@@ -16,7 +14,10 @@
         "@playwright/mcp@latest",
         "--vision"
       ],
-      "env": {},
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "/home/loai1/.cache/ms-playwright",
+        "DISPLAY": ":0"
+      },
       "description": "Browser automation with Playwright and vision capabilities"
     },
     "git": {
@@ -49,10 +50,12 @@
     "playwright": {
       "command": "npx",
       "args": [
-        "-y",
-        "@executeautomation/playwright-mcp-server"
+        "@playwright/mcp@latest"
       ],
-      "env": {},
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "/home/loai1/.cache/ms-playwright",
+        "DISPLAY": ":0"
+      },
       "description": "Browser automation with Playwright"
     },
     "puppeteer": {
@@ -61,17 +64,12 @@
         "-y",
         "@modelcontextprotocol/server-puppeteer"
       ],
-      "env": {},
+      "env": {
+        "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "false",
+        "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/chromium-browser",
+        "DISPLAY": ":0"
+      },
       "description": "Browser automation with Puppeteer"
-    },
-    "browser-tools": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@agentdeskai/browser-tools-mcp@1.2.0"
-      ],
-      "env": {},
-      "description": "Advanced browser interaction tools"
     },
     "neon": {
       "command": "npx",
