@@ -46,6 +46,21 @@ scripts\deploy-docker.ps1
 scripts/deploy-docker.sh
 ```
 
+### **Claude Code Integration**
+Import your MCP servers from Claude Desktop to Claude Code (requires WSL/macOS):
+```bash
+# In WSL or macOS terminal:
+claude mcp add-from-claude-desktop
+
+# Verify import:
+claude mcp list
+
+# Add to global configuration:
+claude mcp add-from-claude-desktop -s global
+```
+
+**Note**: Server names must follow pattern `^[a-zA-Z0-9_-]{1,64}$` (no spaces).
+
 ## 📦 **What's Included**
 
 ### **12 MCP Servers Available**
@@ -65,7 +80,8 @@ scripts/deploy-docker.sh
 | **AI** | `sequential-thinking` | Enhanced reasoning capabilities |
 
 ### **Supported AI Clients**
-- ✅ **Claude Desktop** - Full integration
+- ✅ **Claude Desktop** - Full integration (Master configuration)
+- ✅ **Claude Code** - Import from Claude Desktop via CLI
 - ✅ **Cursor** - Full integration
 - ✅ **Windsurf** - Full integration
 - ✅ **VS Code Copilot** - Configuration available
@@ -110,6 +126,7 @@ mcp-server/
 
 ## 🔧 **Management Commands**
 
+### **Docker Operations**
 | Task | Command |
 |------|---------|
 | **Start server** | `docker-compose up -d` |
@@ -119,6 +136,15 @@ mcp-server/
 | **Update** | `docker-compose pull && docker-compose up -d` |
 | **Health check** | `curl http://localhost:3333/health` |
 | **Build image** | `docker build -t luaper-tech/unified-mcp:latest .` |
+
+### **MCP Configuration**
+| Task | Command |
+|------|---------|
+| **Deploy to Claude Desktop** | `python scripts/manage-mcp.py deploy` |
+| **Check configuration** | `python scripts/verify-claude-config.py` |
+| **Generate configs** | `python scripts/generate-mcp-configs.py` |
+| **Claude Code setup** | `python scripts/setup-claude-code.py status` |
+| **Import to Claude Code** | `./scripts/claude-code-import.sh` (WSL) |
 
 ## 🔗 **Access Points**
 
@@ -132,6 +158,7 @@ mcp-server/
 
 - **[Docker Deployment Guide](docs/docker-mcp-deployment.md)** - Complete Docker setup
 - **[Unified MCP Setup](docs/unified-mcp-setup.md)** - Configuration details
+- **[Claude Code Integration](docs/claude-code-integration.md)** - Import from Claude Desktop
 - **[Client Configuration](config/clients/README.md)** - AI client setup
 
 ## 🤝 **Contributing**

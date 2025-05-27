@@ -87,11 +87,11 @@
       "command": "npx",
       "args": [
         "-y",
-        "@supabase/mcp-server-supabase@latest",
-        "--access-token-env",
-        "sbp_a75051a54209b1840eeeef812906a947c99f77fe"
+        "@supabase/mcp-server-supabase@latest"
       ],
-      "env": {},
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "$env:SUPABASE_ACCESS_TOKEN"
+      },
       "description": "Supabase database and auth operations"
     },
     "github": {

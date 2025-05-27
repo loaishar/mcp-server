@@ -107,8 +107,10 @@
     },
     "supabase": {
       "command": "npx",
-      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--access-token-env", "SUPABASE_ACCESS_TOKEN"],
-      "env": {},
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "$env:SUPABASE_ACCESS_TOKEN"
+      },
       "description": "Supabase database and auth operations",
       "category": "database",
       "priority": 10,
