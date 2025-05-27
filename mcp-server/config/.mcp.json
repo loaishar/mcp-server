@@ -1,0 +1,85 @@
+{
+  "mcpServers": {
+    "unified-mcp": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-p", "3333:3333", "--env-file", ".env", "luaper-tech/unified-mcp:latest"],
+      "env": {},
+      "description": "Unified MCP server for all AI tools with comprehensive toolset (Docker-based)"
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "env": {},
+      "description": "Git operations and repository management"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "description": "Persistent memory for conversations"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {},
+      "description": "Enhanced reasoning capabilities"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@executeautomation/playwright-mcp-server"],
+      "env": {},
+      "description": "Browser automation with Playwright"
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+      "env": {},
+      "description": "Browser automation with Puppeteer"
+    },
+    "browser-tools": {
+      "command": "npx",
+      "args": ["-y", "@agentdeskai/browser-tools-mcp@1.2.0"],
+      "env": {},
+      "description": "Advanced browser interaction tools"
+    },
+    "neon": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.neon.tech/sse"],
+      "env": {},
+      "description": "Neon database operations"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--access-token-env", "SUPABASE_ACCESS_TOKEN"],
+      "env": {},
+      "description": "Supabase database and auth operations"
+    },
+    "github": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "$env:GITHUB_PERSONAL_ACCESS_TOKEN"
+      },
+      "description": "GitHub repository and issue management"
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-mcp"],
+      "env": {
+        "FIGMA_API_KEY": "$env:FIGMA_API_KEY"
+      },
+      "description": "Figma design file access and manipulation"
+    },
+    "hyperbrowser": {
+      "command": "npx",
+      "args": ["-y", "hyperbrowser-mcp"],
+      "env": {
+        "HYPERBROWSER_API_KEY": "$env:HYPERBROWSER_API_KEY"
+      },
+      "description": "Advanced web browsing and scraping"
+    }
+  },
+  "version": "2025-05-27",
+  "description": "Unified MCP configuration for all AI development tools",
+  "author": "LuaPer Tech Development Team"
+}

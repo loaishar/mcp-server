@@ -1,0 +1,3 @@
+# Unified MCP Server Dependencies
+python-dotenv>=1.0.0
+psutil>=5.8.0

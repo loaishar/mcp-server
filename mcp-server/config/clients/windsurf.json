@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "unified-mcp": {
+      "command": "C:\\Python313\\python.exe",
+      "args": [
+        "C:\\Users\\loai1\\mcp-server\\src\\unified_mcp.py"
+      ],
+      "env": {
+        "PYTHONPATH": "C:\\Users\\loai1\\AppData\\Roaming\\Python\\Python313\\site-packages"
+      },
+      "description": "Unified MCP Protocol Server - Bridge to all 13 MCP servers"
+    }
+  },
+  "_metadata": {
+    "generated_from": "master-mcp-config.json",
+    "generated_at": "2025-05-27T19:27:49.400828",
+    "client": "windsurf",
+    "description": "Windsurf - Collaborative development",
+    "enabled_servers": [
+      "unified-mcp"
+    ],
+    "server_count": 1
+  }
+}
