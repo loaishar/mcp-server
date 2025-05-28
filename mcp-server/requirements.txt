@@ -1,3 +1,15 @@
 # Unified MCP Server Dependencies
+# Core MCP SDK
+mcp>=1.2.0
+
+# HTTP client for API requests
+httpx>=0.25.0
+
+# Environment variables
 python-dotenv>=1.0.0
+
+# System utilities
 psutil>=5.8.0
+
+# Additional MCP tools
+mcp[cli]>=1.2.0

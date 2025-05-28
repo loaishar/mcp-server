@@ -16,34 +16,63 @@ This project implements a **unified MCP server architecture** that allows all AI
 ## 🚀 **Quick Start**
 
 ### **Prerequisites**
-- Docker Desktop installed
-- Git installed
+- **Docker Desktop** (Windows/macOS) or **Docker Engine** (Linux)
+- **Git** installed
+- **Python 3.10+** (for local development and Linux MCP clients)
+- **Node.js 18+** (for NPM-based MCP servers)
 
-### **1-Minute Setup**
+### **1-Minute Docker Setup (Recommended)**
 ```bash
 # 1. Clone repository
-git clone <your-repo-url>
-cd mcp-server
+git clone https://github.com/loaishar/mcp-server.git
+cd mcp-server/mcp-server
 
-# 2. Configure environment
-cp config/.env.example .env
-# Edit .env with your API keys
+# 2. Quick start (interactive setup)
+./scripts/quick-start.sh
+# or on Windows: .\scripts\quick-start.ps1
 
-# 3. Deploy with Docker
-docker-compose up -d
+# 3. Verify deployment
+curl http://localhost:3333/health
+```
 
-# 4. Verify deployment
+### **Manual Docker Setup**
+```bash
+# 1. Configure environment
+cp .env.example .env
+# Edit .env with your API keys (optional)
+
+# 2. Deploy with Docker Compose
+docker compose up -d
+
+# 3. Verify deployment
+docker compose ps
 curl http://localhost:3333/health
 ```
 
 ### **Configure AI Clients**
+
+#### For Windows/macOS (Claude Desktop Available)
 ```bash
-# Copy client configurations
 # Windows:
 scripts\deploy-docker.ps1
 
-# Linux/macOS:
+# macOS:
 scripts/deploy-docker.sh
+```
+
+#### For Linux (Claude Desktop Not Available)
+```bash
+# Test MCP servers
+./scripts/test-mcp-docker.sh
+
+# Interactive MCP client
+python3 src/mcp_client.py docker exec -i unified-mcp-server python src/unified_mcp.py
+
+# MCP Inspector (web-based)
+npx @modelcontextprotocol/inspector docker exec -i unified-mcp-server python src/unified_mcp.py
+
+# See full Linux guide
+cat LINUX_MCP_GUIDE.md
 ```
 
 ### **Claude Code Integration**
@@ -129,13 +158,16 @@ mcp-server/
 ### **Docker Operations**
 | Task | Command |
 |------|---------|
-| **Start server** | `docker-compose up -d` |
-| **Stop server** | `docker-compose down` |
-| **View logs** | `docker-compose logs -f` |
-| **Restart** | `docker-compose restart` |
-| **Update** | `docker-compose pull && docker-compose up -d` |
+| **Quick start** | `./scripts/quick-start.sh` (Linux/macOS) or `.\scripts\quick-start.ps1` (Windows) |
+| **Start server** | `docker compose up -d` |
+| **Stop server** | `docker compose down` |
+| **View logs** | `docker compose logs -f` |
+| **Restart** | `docker compose restart` |
+| **Update** | `docker compose pull && docker compose up -d` |
 | **Health check** | `curl http://localhost:3333/health` |
-| **Build image** | `docker build -t luaper-tech/unified-mcp:latest .` |
+| **Build images** | `./scripts/build-docker.sh` or `.\scripts\build-docker.ps1` |
+| **Multi-platform build** | `PLATFORMS=linux/amd64,linux/arm64 ./scripts/build-docker.sh` |
+| **Push to registry** | `REGISTRY=myregistry.com/ PUSH=true ./scripts/build-docker.sh` |
 
 ### **MCP Configuration**
 | Task | Command |
@@ -156,10 +188,13 @@ mcp-server/
 
 ## 📋 **Documentation**
 
-- **[Docker Deployment Guide](docs/docker-mcp-deployment.md)** - Complete Docker setup
+- **[Docker Deployment Guide](DOCKER_DEPLOYMENT.md)** - Complete Docker containerization guide
+- **[Linux MCP Guide](LINUX_MCP_GUIDE.md)** - Complete guide for Linux users (Claude Desktop alternative)
+- **[Legacy Docker Guide](docs/docker-mcp-deployment.md)** - Original Docker setup
 - **[Unified MCP Setup](docs/unified-mcp-setup.md)** - Configuration details
 - **[Claude Code Integration](docs/claude-code-integration.md)** - Import from Claude Desktop
 - **[Client Configuration](config/clients/README.md)** - AI client setup
+- **[Linux Examples](config/linux-mcp-examples.json)** - MCP configuration examples for Linux
 
 ## 🤝 **Contributing**
 

@@ -1,0 +1,218 @@
+{
+  "_description": "MCP Server Configuration Examples for Linux Users",
+  "_note": "Since Claude Desktop is not available on Linux, these examples show how to use MCP servers with alternative clients and testing tools",
+  
+  "docker_configurations": {
+    "unified_mcp_docker": {
+      "description": "Run unified MCP server in Docker container",
+      "command": "docker",
+      "args": [
+        "exec", "-i", "unified-mcp-server", 
+        "python", "src/unified_mcp.py"
+      ],
+      "env": {},
+      "notes": "Requires Docker container to be running: docker compose up -d unified-mcp"
+    },
+    
+    "unified_mcp_direct": {
+      "description": "Run unified MCP server directly from Docker image",
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm", 
+        "--network", "mcp-network",
+        "unified-mcp:latest"
+      ],
+      "env": {},
+      "notes": "Runs server in a new container each time"
+    },
+    
+    "nodejs_mcp_docker": {
+      "description": "Run Node.js MCP servers in Docker",
+      "command": "docker",
+      "args": [
+        "exec", "-i", "mcp-nodejs-servers",
+        "npx", "@playwright/mcp@latest", "--vision"
+      ],
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "/home/mcp/.cache/ms-playwright"
+      },
+      "notes": "Requires Node.js container: docker compose up -d mcp-nodejs"
+    }
+  },
+  
+  "local_configurations": {
+    "unified_mcp_local": {
+      "description": "Run unified MCP server locally (requires Python setup)",
+      "command": "python3",
+      "args": ["/absolute/path/to/mcp-server/src/unified_mcp.py"],
+      "env": {
+        "PYTHONPATH": "/absolute/path/to/mcp-server/src"
+      },
+      "notes": "Requires: pip install mcp httpx python-dotenv psutil"
+    },
+    
+    "playwright_mcp_local": {
+      "description": "Run Playwright MCP server locally",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--vision"],
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "/home/user/.cache/ms-playwright"
+      },
+      "notes": "Requires: npm install -g @playwright/mcp && npx playwright install"
+    },
+    
+    "git_mcp_local": {
+      "description": "Run Git MCP server locally",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "env": {},
+      "notes": "Provides Git repository management tools"
+    },
+    
+    "memory_mcp_local": {
+      "description": "Run Memory MCP server locally",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "notes": "Provides persistent conversation memory"
+    }
+  },
+  
+  "testing_configurations": {
+    "mcp_client_test": {
+      "description": "Test MCP server using our Python client",
+      "command": "python3",
+      "args": [
+        "/absolute/path/to/mcp-server/src/mcp_client.py",
+        "python3", "/absolute/path/to/mcp-server/src/unified_mcp.py"
+      ],
+      "env": {},
+      "notes": "Interactive MCP client for testing servers on Linux"
+    },
+    
+    "mcp_inspector": {
+      "description": "Use MCP Inspector for debugging",
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/inspector",
+        "python3", "/absolute/path/to/mcp-server/src/unified_mcp.py"
+      ],
+      "env": {},
+      "notes": "Web-based MCP server inspector and debugger"
+    }
+  },
+  
+  "alternative_clients": {
+    "continue_dev": {
+      "description": "Continue.dev VS Code extension with MCP support",
+      "configuration_file": "~/.continue/config.json",
+      "example_config": {
+        "mcpServers": {
+          "unified-mcp": {
+            "command": "docker",
+            "args": ["exec", "-i", "unified-mcp-server", "python", "src/unified_mcp.py"]
+          }
+        }
+      },
+      "notes": "Install Continue.dev extension in VS Code"
+    },
+    
+    "open_interpreter": {
+      "description": "Open Interpreter with MCP support",
+      "setup_commands": [
+        "pip install open-interpreter",
+        "interpreter --mcp-server 'docker exec -i unified-mcp-server python src/unified_mcp.py'"
+      ],
+      "notes": "Experimental MCP support in Open Interpreter"
+    },
+    
+    "custom_client": {
+      "description": "Build your own MCP client",
+      "example_code": "See /src/mcp_client.py for a simple implementation",
+      "notes": "Use the MCP SDK to build custom clients for your specific needs"
+    }
+  },
+  
+  "development_workflows": {
+    "docker_development": {
+      "description": "Development workflow using Docker",
+      "steps": [
+        "1. Start containers: docker compose up -d",
+        "2. Test servers: ./scripts/test-mcp-docker.sh",
+        "3. Interactive testing: python3 src/mcp_client.py docker exec -i unified-mcp-server python src/unified_mcp.py",
+        "4. View logs: docker compose logs -f unified-mcp",
+        "5. Debug: docker exec -it unified-mcp-server bash"
+      ]
+    },
+    
+    "local_development": {
+      "description": "Local development workflow",
+      "steps": [
+        "1. Install dependencies: pip install -r requirements.txt",
+        "2. Run server: python3 src/unified_mcp.py",
+        "3. Test in another terminal: python3 src/mcp_client.py python3 src/unified_mcp.py",
+        "4. Use MCP Inspector: npx @modelcontextprotocol/inspector python3 src/unified_mcp.py"
+      ]
+    }
+  },
+  
+  "troubleshooting": {
+    "common_issues": {
+      "stdio_communication": {
+        "problem": "MCP client cannot communicate with server",
+        "solutions": [
+          "Ensure server uses STDIO transport",
+          "Check that server outputs only JSON-RPC to stdout",
+          "Verify server logs go to stderr, not stdout",
+          "Test with: echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' | python3 src/unified_mcp.py"
+        ]
+      },
+      
+      "docker_networking": {
+        "problem": "Docker containers cannot communicate",
+        "solutions": [
+          "Ensure containers are on the same network",
+          "Use container names for internal communication",
+          "Check firewall settings",
+          "Verify port mappings: docker compose ps"
+        ]
+      },
+      
+      "permission_issues": {
+        "problem": "Permission denied errors in containers",
+        "solutions": [
+          "Check file ownership: ls -la",
+          "Ensure non-root user has access: chown -R 1000:1000 /app",
+          "Verify volume mounts: docker compose config",
+          "Check SELinux/AppArmor policies"
+        ]
+      }
+    },
+    
+    "debugging_commands": {
+      "test_server_directly": "echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' | python3 src/unified_mcp.py",
+      "check_container_logs": "docker compose logs unified-mcp",
+      "inspect_container": "docker exec -it unified-mcp-server bash",
+      "test_mcp_communication": "python3 src/mcp_client.py --test python3 src/unified_mcp.py",
+      "run_mcp_inspector": "npx @modelcontextprotocol/inspector python3 src/unified_mcp.py"
+    }
+  },
+  
+  "useful_commands": {
+    "docker_management": {
+      "start_services": "docker compose up -d",
+      "stop_services": "docker compose down",
+      "restart_services": "docker compose restart",
+      "view_logs": "docker compose logs -f",
+      "shell_access": "docker exec -it unified-mcp-server bash",
+      "rebuild_images": "docker compose build --no-cache"
+    },
+    
+    "mcp_testing": {
+      "test_all": "./scripts/test-mcp-docker.sh",
+      "quick_test": "./scripts/test-mcp-docker.sh --quick",
+      "interactive_client": "python3 src/mcp_client.py docker exec -i unified-mcp-server python src/unified_mcp.py",
+      "mcp_inspector": "npx @modelcontextprotocol/inspector docker exec -i unified-mcp-server python src/unified_mcp.py"
+    }
+  }
+}
