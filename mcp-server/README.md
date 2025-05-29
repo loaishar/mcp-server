@@ -15,20 +15,33 @@ A fully MCP-compliant server implementation that acts as a bridge to multiple MC
 
 ```
 mcp-server/
-├── src/                     # Source code
-│   ├── server/             # Server implementations
-│   ├── client/             # Client implementations
-│   └── utils/              # Utilities
-├── config/                 # Configuration files
-├── docker/                 # Docker files
-├── scripts/                # Utility scripts
-│   ├── setup/             # Setup scripts
-│   ├── config/            # Config management
-│   └── deploy/            # Deployment scripts
-├── tests/                  # Test suites
-├── docs/                   # Documentation
-└── examples/               # Examples
+├── 📁 src/                      # Source code
+│   ├── server/unified_mcp_v2.py # Main unified server (v2)
+│   ├── client/mcp_client.py     # MCP client for testing
+│   └── utils/                   # Shared utilities
+├── 📁 config/                   # Configuration files
+│   ├── mcp-config.json          # Main server configuration
+│   └── clients/                 # Client-specific configs
+├── 📁 docker/                   # Docker containerization
+│   ├── Dockerfile               # Multi-stage Python build
+│   ├── Dockerfile.nodejs        # Node.js MCP servers
+│   └── docker-compose.yml       # Production deployment
+├── 📁 scripts/                  # Utility scripts
+│   ├── setup/                   # Environment setup scripts
+│   ├── deploy/                  # Deployment automation
+│   └── config/                  # Configuration management
+├── 📁 tests/                    # Comprehensive test suite
+├── 📁 docs/                     # Documentation
+│   ├── guides/                  # User guides
+│   ├── deployment/              # Deployment guides
+│   └── architecture/            # System architecture
+├── 📁 examples/                 # Usage examples
+│   ├── browser-automation/      # Browser automation examples
+│   └── custom-tools/            # Custom tool implementations
+└── 📁 logs/                     # Log files (gitignored)
 ```
+
+> 📖 **Detailed Structure**: See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for complete directory documentation.
 
 ## 🔧 Quick Start
 

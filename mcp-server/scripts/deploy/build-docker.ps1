@@ -56,7 +56,7 @@ function Show-Help {
     @"
 Docker Build Script for MCP Servers (PowerShell)
 
-Usage: .\scripts\build-docker.ps1 [OPTIONS]
+Usage: .\scripts\deploy\build-docker.ps1 [OPTIONS]
 
 Parameters:
   -Registry    Docker registry prefix (e.g., 'myregistry.com/')
@@ -71,16 +71,16 @@ Environment Variables (alternative to parameters):
 
 Examples:
   # Build locally
-  .\scripts\build-docker.ps1
+  .\scripts\deploy\build-docker.ps1
 
   # Build and push to registry
-  .\scripts\build-docker.ps1 -Registry "myregistry.com/" -Push
+  .\scripts\deploy\build-docker.ps1 -Registry "myregistry.com/" -Push
 
   # Build for specific platform
-  .\scripts\build-docker.ps1 -Platforms "linux/amd64"
+  .\scripts\deploy\build-docker.ps1 -Platforms "linux/amd64"
 
   # Build with custom tag
-  .\scripts\build-docker.ps1 -Tag "v1.0.0"
+  .\scripts\deploy\build-docker.ps1 -Tag "v1.0.0"
 
 "@
 }
@@ -194,19 +194,20 @@ function Build-Image {
 function Main {
     Log-Info "Starting Docker build process..."
     
-    # Change to script directory
+    # Change to project root directory
     $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-    $projectDir = Split-Path -Parent $scriptDir
+    $deployDir = Split-Path -Parent $scriptDir
+    $projectDir = Split-Path -Parent $deployDir
     Set-Location $projectDir
     
     Test-Prerequisites
     Initialize-Buildx
     
     # Build unified MCP server
-    Build-Image -Dockerfile "Dockerfile" -ImageName "unified-mcp"
+    Build-Image -Dockerfile "docker/Dockerfile" -ImageName "unified-mcp"
     
     # Build Node.js MCP servers
-    Build-Image -Dockerfile "Dockerfile.nodejs" -ImageName "mcp-nodejs"
+    Build-Image -Dockerfile "docker/Dockerfile.nodejs" -ImageName "mcp-nodejs"
     
     Log-Success "All images built successfully!"
     
