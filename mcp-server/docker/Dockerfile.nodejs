@@ -20,11 +20,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci --only=production
 
-# Install global MCP servers (using correct package names)
+# Install global MCP servers (using available packages)
 RUN npm install -g \
-    @modelcontextprotocol/server-playwright \
     @modelcontextprotocol/server-memory \
-    @modelcontextprotocol/server-sequential-thinking
+    @modelcontextprotocol/server-sequential-thinking \
+    @executeautomation/playwright-mcp-server \
+    @cyanheads/git-mcp-server || echo "Some packages may not be available"
 
 # Install Playwright browsers
 RUN npx playwright install --with-deps chromium firefox webkit
@@ -79,4 +80,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 EXPOSE 9229 9323 9324 9325
 
 # Default command (can be overridden)
-CMD ["npx", "@modelcontextprotocol/server-playwright"]
+CMD ["npx", "@executeautomation/playwright-mcp-server"]

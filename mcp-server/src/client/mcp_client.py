@@ -8,8 +8,7 @@ Based on the MCP quickstart documentation.
 import asyncio
 import json
 import sys
-import subprocess
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 import argparse
 
 class MCPClient:

@@ -5,7 +5,6 @@ Test script to verify MCP server connection
 
 import subprocess
 import json
-import time
 import sys
 
 def test_mcp_server():
@@ -15,12 +14,12 @@ def test_mcp_server():
     try:
         # Start the MCP server
         process = subprocess.Popen(
-            ["python", "src/unified_mcp.py"],
+            ["python", "src/server/unified_mcp_v2.py"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            cwd="C:\\Users\\loai1\\mcp-server"
+            cwd="C:\\Users\\loai1\\Documents\\GitHub\\mcp-server\\mcp-server"
         )
 
         # Send initialize request
@@ -49,6 +48,16 @@ def test_mcp_server():
                     print(f"   Server: {response['result']['serverInfo']['name']}")
                     print(f"   Version: {response['result']['serverInfo']['version']}")
 
+                    # Send initialized notification
+                    initialized_notification = {
+                        "jsonrpc": "2.0",
+                        "method": "initialized",
+                        "params": {}
+                    }
+                    print("📤 Sending initialized notification...")
+                    process.stdin.write(json.dumps(initialized_notification) + "\n")
+                    process.stdin.flush()
+
                     # Test tools/list
                     tools_request = {
                         "jsonrpc": "2.0",
@@ -75,21 +84,28 @@ def test_mcp_server():
                                 print(f"   ... and {tools_count - 5} more tools")
 
                             print("\n🎉 MCP Server is working correctly!")
-                            return True
+                            assert True
+                            return
                         else:
                             print(f"❌ Tools list failed: {tools_response}")
+                            assert False, "Tools list failed"
                     else:
                         print("❌ No response to tools/list request")
+                        assert False, "No response to tools/list request"
                 else:
                     print(f"❌ Initialize failed: {response}")
+                    assert False, "Initialize failed"
             except json.JSONDecodeError as e:
                 print(f"❌ Invalid JSON response: {e}")
                 print(f"   Raw response: {response_line}")
+                assert False, f"Invalid JSON response: {e}"
         else:
             print("❌ No response from server")
+            assert False, "No response from server"
 
     except Exception as e:
         print(f"❌ Error testing MCP server: {e}")
+        assert False, f"Error testing MCP server: {e}"
 
     finally:
         try:
@@ -98,8 +114,14 @@ def test_mcp_server():
         except:
             process.kill()
 
-    return False
-
 if __name__ == "__main__":
-    success = test_mcp_server()
-    sys.exit(0 if success else 1)
+    try:
+        test_mcp_server()
+        print("✅ All tests passed!")
+        sys.exit(0)
+    except AssertionError as e:
+        print(f"❌ Test failed: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        sys.exit(1)

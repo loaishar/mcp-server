@@ -11,10 +11,8 @@ import sys
 import os
 import logging
 import subprocess
-import httpx
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, Any
 from datetime import datetime
-import time
 
 # Import FastMCP for modern MCP server development
 try:
@@ -233,7 +231,7 @@ class MCPServer:
             self.tools.extend(supabase_tools)
 
             # Extract tools from all configured MCP servers
-            for server_name, server_config in config.get('mcpServers', {}).items():
+            for server_name, _server_config in config.get('mcpServers', {}).items():
                 # Skip supabase since we added real tools above
                 if server_name == "supabase":
                     continue
@@ -373,7 +371,7 @@ class MCPServer:
             await process.stdin.drain()
 
             # Read initialization response
-            init_response = await process.stdout.readline()
+            _init_response = await process.stdout.readline()
 
             # Send the actual tool call
             tool_request = {
@@ -538,7 +536,7 @@ class MCPServer:
             "serverInfo": self.server_info
         }
 
-    async def handle_tools_list(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def handle_tools_list(self, _params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle tools/list request."""
         logger.info("Tools list requested")
         return {

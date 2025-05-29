@@ -8,7 +8,7 @@
   "mcpServers": {
     "unified-mcp": {
       "command": "C:\\Python313\\python.exe",
-      "args": ["C:\\Users\\loai1\\mcp-server\\src\\unified_mcp.py"],
+      "args": ["C:\\Users\\loai1\\Documents\\GitHub\\mcp-server\\mcp-server\\src\\server\\unified_mcp_v2.py"],
       "env": {
         "PYTHONPATH": "C:\\Users\\loai1\\AppData\\Roaming\\Python\\Python313\\site-packages"
       },

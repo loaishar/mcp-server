@@ -7,7 +7,6 @@ Provides commands to manage the master MCP configuration and regenerate client c
 import json
 import sys
 import os
-from pathlib import Path
 from datetime import datetime
 
 # Import the generator class directly

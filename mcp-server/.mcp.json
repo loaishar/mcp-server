@@ -1,94 +1,56 @@
 {
   "mcpServers": {
-    "unified-mcp": {
-      "command": "C:\\Python313\\python.exe",
-      "args": [
-        "C:\\Users\\loai1\\Documents\\GitHub\\mcp-server\\mcp-server\\src\\server\\unified_mcp_v2.py"
-      ],
-      "env": {
-        "PYTHONPATH": "C:\\Users\\loai1\\AppData\\Roaming\\Python\\Python313\\site-packages"
-      },
-      "description": "Unified MCP Protocol Server - Bridge to all 13 MCP servers"
-    },
     "playwright-vision": {
       "command": "npx",
-      "args": [
-        "@playwright/mcp@latest",
-        "--vision"
-      ],
+      "args": ["@playwright/mcp@latest", "--vision"],
       "env": {},
       "description": "Browser automation with Playwright and vision capabilities"
     },
     "git": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@cyanheads/git-mcp-server"
-      ],
+      "args": ["-y", "@cyanheads/git-mcp-server"],
       "env": {},
       "description": "Git operations and repository management"
     },
     "memory": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
       "env": {},
       "description": "Persistent memory for conversations"
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "env": {},
       "description": "Enhanced reasoning capabilities"
     },
     "playwright": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@executeautomation/playwright-mcp-server"
-      ],
+      "args": ["-y", "@executeautomation/playwright-mcp-server"],
       "env": {},
       "description": "Browser automation with Playwright"
     },
     "puppeteer": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-puppeteer"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
       "env": {},
       "description": "Browser automation with Puppeteer"
     },
     "browser-tools": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@agentdeskai/browser-tools-mcp@1.2.0"
-      ],
+      "args": ["-y", "@agentdeskai/browser-tools-mcp@1.2.0"],
       "env": {},
       "description": "Advanced browser interaction tools"
     },
     "neon": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.neon.tech/sse"
-      ],
+      "args": ["-y", "mcp-remote", "https://mcp.neon.tech/sse"],
       "env": {},
       "description": "Neon database operations"
     },
     "supabase": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@supabase/mcp-server-supabase@latest"
-      ],
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
       "env": {
         "SUPABASE_ACCESS_TOKEN": "$env:SUPABASE_ACCESS_TOKEN"
       },
@@ -96,14 +58,7 @@
     },
     "github": {
       "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "GITHUB_PERSONAL_ACCESS_TOKEN",
-        "ghcr.io/github/github-mcp-server"
-      ],
+      "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "$env:GITHUB_PERSONAL_ACCESS_TOKEN"
       },
@@ -111,10 +66,7 @@
     },
     "figma": {
       "command": "npx",
-      "args": [
-        "-y",
-        "figma-mcp"
-      ],
+      "args": ["-y", "figma-mcp"],
       "env": {
         "FIGMA_API_KEY": "$env:FIGMA_API_KEY"
       },
@@ -122,10 +74,7 @@
     },
     "hyperbrowser": {
       "command": "npx",
-      "args": [
-        "-y",
-        "hyperbrowser-mcp"
-      ],
+      "args": ["-y", "hyperbrowser-mcp"],
       "env": {
         "HYPERBROWSER_API_KEY": "$env:HYPERBROWSER_API_KEY"
       },
