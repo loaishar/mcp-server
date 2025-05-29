@@ -1,0 +1,170 @@
+version: '3.8'
+
+services:
+  # Main Unified MCP Server v2 - Stdio Mode (for Claude Desktop)
+  unified-mcp-stdio:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY:-}unified-mcp-v2:${TAG:-latest}
+    container_name: unified-mcp-server-stdio
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PYTHONUNBUFFERED=1
+      - MCP_TRANSPORT=stdio
+      - PYTHONIOENCODING=utf-8
+      # Pass through API keys for proxy servers
+      - SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - FIGMA_API_KEY=${FIGMA_API_KEY}
+      - HYPERBROWSER_API_KEY=${HYPERBROWSER_API_KEY}
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+      - ./src:/app/src:ro  # Mount source for development
+      - ./.mcp.json:/app/.mcp.json:ro
+    networks:
+      - mcp-network
+    stdin_open: true  # Enable STDIN for MCP communication
+    tty: false        # Disable TTY to maintain clean STDIO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "mcp.server.type=unified-v2"
+      - "mcp.server.transport=stdio"
+      - "mcp.server.compliant=true"
+
+  # Main Unified MCP Server v2 - HTTP Mode (for remote access)
+  unified-mcp-http:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY:-}unified-mcp-v2:${TAG:-latest}
+    container_name: unified-mcp-server-http
+    restart: unless-stopped
+    command: ["--transport", "http", "--port", "3333"]
+    ports:
+      - "3333:3333"
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PYTHONUNBUFFERED=1
+      - MCP_TRANSPORT=http
+      - PYTHONIOENCODING=utf-8
+      # Pass through API keys
+      - SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - FIGMA_API_KEY=${FIGMA_API_KEY}
+      - HYPERBROWSER_API_KEY=${HYPERBROWSER_API_KEY}
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+      - ./src:/app/src:ro
+      - ./.mcp.json:/app/.mcp.json:ro
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "mcp.server.type=unified-v2"
+      - "mcp.server.transport=http"
+      - "mcp.server.compliant=true"
+    profiles:
+      - http
+
+  # Node.js-based MCP Servers (for proxying)
+  mcp-nodejs:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.nodejs
+    image: ${REGISTRY:-}mcp-nodejs:${TAG:-latest}
+    container_name: mcp-nodejs-servers
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PLAYWRIGHT_BROWSERS_PATH=/home/mcp/.cache/ms-playwright
+      - DISPLAY=:99
+    volumes:
+      - ./logs:/app/logs
+      - playwright-cache:/home/mcp/.cache/ms-playwright
+    networks:
+      - mcp-network
+    depends_on:
+      - unified-mcp-stdio
+
+  # Optional: Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - mcp-network
+    command: redis-server --appendonly yes
+    profiles:
+      - full
+
+  # Optional: Nginx reverse proxy for HTTP mode
+  nginx:
+    image: nginx:alpine
+    container_name: mcp-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - mcp-network
+    depends_on:
+      - unified-mcp-http
+    profiles:
+      - http
+      - full
+
+  # Development tools container
+  mcp-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY:-}unified-mcp-v2:${TAG:-latest}
+    container_name: mcp-dev-tools
+    command: ["tail", "-f", "/dev/null"]  # Keep container running
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./:/app
+      - ./tests:/app/tests
+    networks:
+      - mcp-network
+    profiles:
+      - dev
+
+networks:
+  mcp-network:
+    driver: bridge
+    name: mcp-network
+
+volumes:
+  playwright-cache:
+    name: mcp-playwright-cache
+  redis-data:
+    name: mcp-redis-data

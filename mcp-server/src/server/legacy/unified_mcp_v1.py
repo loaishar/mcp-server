@@ -121,8 +121,123 @@ class MCPServer:
             # Add Playwright tools to the main tools list
             self.tools.extend(playwright_tools)
 
+            # Add real Supabase tools
+            supabase_tools = [
+                {
+                    "name": "list_projects",
+                    "description": "Lists all Supabase projects for the user",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "required": []
+                    }
+                },
+                {
+                    "name": "get_project",
+                    "description": "Gets details for a project",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "project_ref": {
+                                "type": "string",
+                                "description": "Project reference ID"
+                            }
+                        },
+                        "required": ["project_ref"]
+                    }
+                },
+                {
+                    "name": "create_project",
+                    "description": "Creates a new Supabase project",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Project name"
+                            },
+                            "organization_id": {
+                                "type": "string",
+                                "description": "Organization ID"
+                            },
+                            "region": {
+                                "type": "string",
+                                "description": "AWS region"
+                            }
+                        },
+                        "required": ["name", "organization_id", "region"]
+                    }
+                },
+                {
+                    "name": "list_tables",
+                    "description": "Lists all tables within the specified schemas",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "project_ref": {
+                                "type": "string",
+                                "description": "Project reference ID"
+                            },
+                            "schemas": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "Schema names to list tables from",
+                                "default": ["public"]
+                            }
+                        },
+                        "required": ["project_ref"]
+                    }
+                },
+                {
+                    "name": "execute_sql",
+                    "description": "Executes raw SQL in the database",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "project_ref": {
+                                "type": "string",
+                                "description": "Project reference ID"
+                            },
+                            "query": {
+                                "type": "string",
+                                "description": "SQL query to execute"
+                            }
+                        },
+                        "required": ["project_ref", "query"]
+                    }
+                },
+                {
+                    "name": "apply_migration",
+                    "description": "Applies a SQL migration to the database",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "project_ref": {
+                                "type": "string",
+                                "description": "Project reference ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Migration name"
+                            },
+                            "sql": {
+                                "type": "string",
+                                "description": "SQL migration content"
+                            }
+                        },
+                        "required": ["project_ref", "name", "sql"]
+                    }
+                }
+            ]
+
+            self.tools.extend(supabase_tools)
+
             # Extract tools from all configured MCP servers
             for server_name, server_config in config.get('mcpServers', {}).items():
+                # Skip supabase since we added real tools above
+                if server_name == "supabase":
+                    continue
+
                 # Add basic tools for each server
                 self.tools.extend([
                     {
@@ -217,6 +332,102 @@ class MCPServer:
                     }
                 }
             ]
+
+    async def proxy_to_supabase(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """Proxy Supabase tool calls to the actual Supabase MCP server."""
+        try:
+            # Get Supabase access token from environment
+            access_token = os.getenv('SUPABASE_ACCESS_TOKEN')
+            if not access_token:
+                return {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Error: SUPABASE_ACCESS_TOKEN environment variable not set"
+                        }
+                    ]
+                }
+
+            # Start Supabase MCP server process
+            cmd = ["npx", "-y", "@supabase/mcp-server-supabase@latest", "--access-token", access_token]
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdin=asyncio.subprocess.PIPE,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+
+            # Initialize the Supabase server
+            init_request = {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {},
+                    "clientInfo": {"name": "unified-mcp", "version": "1.0"}
+                }
+            }
+
+            process.stdin.write((json.dumps(init_request) + "\n").encode())
+            await process.stdin.drain()
+
+            # Read initialization response
+            init_response = await process.stdout.readline()
+
+            # Send the actual tool call
+            tool_request = {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": tool_name,
+                    "arguments": arguments
+                }
+            }
+
+            process.stdin.write((json.dumps(tool_request) + "\n").encode())
+            await process.stdin.drain()
+
+            # Read tool response
+            tool_response = await process.stdout.readline()
+
+            # Close the process
+            process.stdin.close()
+            await process.wait()
+
+            if tool_response:
+                response_data = json.loads(tool_response.decode())
+                if "result" in response_data:
+                    return response_data["result"]
+                elif "error" in response_data:
+                    return {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": f"Supabase error: {response_data['error']['message']}"
+                            }
+                        ]
+                    }
+
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"No response from Supabase server for tool: {tool_name}"
+                    }
+                ]
+            }
+
+        except Exception as e:
+            return {
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"Error in Supabase proxy: {e}"
+                    }
+                ]
+            }
 
     async def proxy_to_playwright(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         """Proxy Playwright tool calls to the actual Playwright MCP server."""
@@ -473,6 +684,10 @@ class MCPServer:
                             }
                         ]
                     }
+
+            # Handle Supabase tools by proxying to the actual Supabase MCP server
+            elif tool_name in ["list_projects", "get_project", "create_project", "list_tables", "execute_sql", "apply_migration"]:
+                return await self.proxy_to_supabase(tool_name, arguments)
 
             # Handle Playwright tools by proxying to the actual Playwright MCP server
             elif tool_name.startswith("playwright_"):

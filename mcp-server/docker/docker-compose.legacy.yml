@@ -16,6 +16,10 @@ services:
       - PYTHONUNBUFFERED=1
       - MCP_TRANSPORT=stdio
       - PYTHONIOENCODING=utf-8
+      - SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     volumes:
       - ./logs:/app/logs
       - ./config:/app/config:ro
