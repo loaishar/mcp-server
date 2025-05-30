@@ -1,0 +1,51 @@
+{
+  "mcpServers": {
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/git-mcp-server"],
+      "env": {},
+      "description": "Git operations and repository management"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "description": "Persistent memory for conversations"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/sequential-thinking-mcp-server"],
+      "env": {},
+      "description": "Enhanced reasoning and step-by-step thinking"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/playwright-mcp-server"],
+      "env": {},
+      "description": "Web automation and browser control"
+    },
+    "playwright-vision": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/playwright-mcp-server", "--vision"],
+      "env": {},
+      "description": "Web automation with visual AI capabilities"
+    },
+    "github": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "--env-file", "/dev/null", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN=$env:GITHUB_TOKEN", "ghcr.io/github/github-mcp-server"],
+      "env": {
+        "GITHUB_TOKEN": "$env:GITHUB_TOKEN"
+      },
+      "description": "GitHub repository and issue management"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-supabase"],
+      "env": {
+        "SUPABASE_URL": "$env:SUPABASE_URL",
+        "SUPABASE_ANON_KEY": "$env:SUPABASE_ANON_KEY"
+      },
+      "description": "Supabase database operations"
+    }
+  }
+}

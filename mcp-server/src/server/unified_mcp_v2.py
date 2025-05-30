@@ -508,23 +508,28 @@ class MCPServerV2:
 
     async def initialize_proxy_servers(self):
         """Initialize connections to all configured MCP servers"""
-        logger.info("Initializing proxy server connections...")
+        try:
+            logger.info("Initializing proxy server connections...")
 
-        tasks = []
-        for server_name, server_config in self.mcp_servers.items():
-            if server_name != "unified-mcp":  # Skip ourselves
-                task = self.start_server_connection(server_name, server_config)
-                tasks.append(task)
+            tasks = []
+            for server_name, server_config in self.mcp_servers.items():
+                if server_name != "unified-mcp":  # Skip ourselves
+                    task = self.start_server_connection(server_name, server_config)
+                    tasks.append(task)
 
-        # Start all servers concurrently
-        connections = await asyncio.gather(*tasks, return_exceptions=True)
+            # Start all servers concurrently
+            connections = await asyncio.gather(*tasks, return_exceptions=True)
 
-        # Store successful connections
-        for conn in connections:
-            if isinstance(conn, ServerConnection) and conn:
-                self.server_connections[conn.name] = conn
+            # Store successful connections
+            for conn in connections:
+                if isinstance(conn, ServerConnection) and conn:
+                    self.server_connections[conn.name] = conn
+                elif isinstance(conn, Exception):
+                    logger.error(f"Server connection failed: {conn}")
 
-        logger.info(f"Connected to {len(self.server_connections)} servers")
+            logger.info(f"Connected to {len(self.server_connections)} servers")
+        except Exception as e:
+            logger.error(f"Error during proxy server initialization: {e}")
 
         # Start health monitoring
         if not self.health_check_task:
@@ -537,19 +542,13 @@ class MCPServerV2:
         self.protocol_version = params.get("protocolVersion")
         self.client_info = params.get("clientInfo", {})
 
-        # Initialize proxy connections
-        await self.initialize_proxy_servers()
-
-        # Build aggregate capabilities
+        # Build basic capabilities (will be updated after proxy servers connect)
         capabilities = {
-            "tools": {} if self.tools else None,
-            "resources": {} if self.resources else None,
-            "prompts": {} if self.prompts else None,
+            "tools": {},
+            "resources": {},
+            "prompts": {},
             "logging": {}
         }
-
-        # Remove None capabilities
-        capabilities = {k: v for k, v in capabilities.items() if v is not None}
 
         return {
             "protocolVersion": "2024-11-05",
@@ -561,6 +560,15 @@ class MCPServerV2:
         """Handle initialized notification from client"""
         logger.info("Client initialized notification received")
         self.initialized = True
+        logger.info(f"Server initialized flag set to: {self.initialized}")
+
+        # Now that client is ready, initialize proxy connections in background
+        # Use proper error handling to prevent exceptions from leaking
+        try:
+            task = asyncio.create_task(self.initialize_proxy_servers())
+            logger.info("Started proxy server initialization task")
+        except Exception as e:
+            logger.error(f"Error starting proxy server initialization: {e}")
 
     async def handle_tools_list(self, _params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle tools/list request"""
@@ -786,6 +794,7 @@ class MCPServerV2:
 
     async def handle_prompts_list(self, _params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle prompts/list request"""
+        logger.info(f"Prompts list requested. Initialized: {self.initialized}, Prompts count: {len(self.prompts)}")
         if not self.initialized:
             raise Exception("Server not initialized")
 
@@ -849,8 +858,10 @@ class MCPServerV2:
             # Route to appropriate handler
             if method == "initialize":
                 result = await self.handle_initialize(params)
-            elif method == "initialized":
+            elif method == "notifications/initialized":
+                logger.info(f"Processing notifications/initialized with params: {params}")
                 await self.handle_initialized(params)
+                logger.info(f"Server initialized flag is now: {self.initialized}")
                 return None  # No response for notifications
             elif method == "tools/list":
                 result = await self.handle_tools_list(params)

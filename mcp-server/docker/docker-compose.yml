@@ -23,10 +23,10 @@ services:
       - FIGMA_API_KEY=${FIGMA_API_KEY}
       - HYPERBROWSER_API_KEY=${HYPERBROWSER_API_KEY}
     volumes:
-      - ./logs:/app/logs
-      - ./config:/app/config:ro
-      - ./src:/app/src:ro  # Mount source for development
-      - ./.mcp.json:/app/.mcp.json:ro
+      - ../logs:/app/logs
+      - ../config:/app/config:ro
+      - ../src:/app/src:ro  # Mount source for development
+      - ../.mcp.json:/app/.mcp.json:ro
     networks:
       - mcp-network
     stdin_open: true  # Enable STDIN for MCP communication
@@ -67,10 +67,10 @@ services:
       - FIGMA_API_KEY=${FIGMA_API_KEY}
       - HYPERBROWSER_API_KEY=${HYPERBROWSER_API_KEY}
     volumes:
-      - ./logs:/app/logs
-      - ./config:/app/config:ro
-      - ./src:/app/src:ro
-      - ./.mcp.json:/app/.mcp.json:ro
+      - ../logs:/app/logs
+      - ../config:/app/config:ro
+      - ../src:/app/src:ro
+      - ../.mcp.json:/app/.mcp.json:ro
     networks:
       - mcp-network
     healthcheck:
@@ -99,7 +99,7 @@ services:
       - PLAYWRIGHT_BROWSERS_PATH=/home/mcp/.cache/ms-playwright
       - DISPLAY=:99
     volumes:
-      - ./logs:/app/logs
+      - ../logs:/app/logs
       - playwright-cache:/home/mcp/.cache/ms-playwright
     networks:
       - mcp-network

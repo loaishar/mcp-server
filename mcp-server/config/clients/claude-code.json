@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "unified-mcp": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-v", "/mnt/c/Users/loai1/OneDrive/Documents/GitHub/mcp-server/mcp-server/.mcp.json:/app/.mcp.json:ro",
+        "unified-mcp-v2:latest",
+        "--transport", "stdio"
+      ],
+      "env": {},
+      "description": "Unified MCP Server v2 - Fixed version with Git and Memory servers"
+    }
+  }
+}

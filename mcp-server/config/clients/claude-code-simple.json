@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "simple-mcp-test": {
+      "command": "python3",
+      "args": ["/mnt/c/Users/loai1/OneDrive/Documents/GitHub/mcp-server/mcp-server/src/server/simple_mcp_test.py"],
+      "env": {},
+      "description": "Simple MCP test server for debugging"
+    }
+  }
+}

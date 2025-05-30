@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/git-mcp-server"],
+      "env": {},
+      "description": "Git operations and repository management"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "description": "Persistent memory for conversations"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/sequential-thinking-mcp-server"],
+      "env": {},
+      "description": "Enhanced reasoning and step-by-step thinking"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/playwright-mcp-server"],
+      "env": {},
+      "description": "Web automation and browser control"
+    }
+  }
+}

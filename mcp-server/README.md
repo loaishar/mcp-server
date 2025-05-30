@@ -1,4 +1,4 @@
-# Unified MCP Server v2
+# 🚀 Unified MCP Server v2 (Clean & Optimized)
 
 A fully MCP-compliant server implementation that acts as a bridge to multiple MCP servers, providing a unified interface for AI assistants like Claude Desktop.
 

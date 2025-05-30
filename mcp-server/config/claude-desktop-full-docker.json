@@ -1,0 +1,64 @@
+{
+  "mcpServers": {
+    "unified-mcp": {
+      "command": "docker",
+      "args": ["exec", "-i", "unified-mcp-server-stdio", "python", "src/server/unified_mcp_v2.py"],
+      "env": {},
+      "description": "Unified MCP server with Git and Memory (Docker-based, tested and working)"
+    },
+    "filesystem": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--mount", "type=bind,src=C:\\Users\\loai1\\OneDrive\\Documents\\GitHub\\mcp-server,dst=/projects/mcp-server",
+        "--mount", "type=bind,src=C:\\Users\\loai1\\OneDrive\\Documents,dst=/projects/Documents",
+        "--mount", "type=bind,src=C:\\Users\\loai1\\Desktop,dst=/projects/Desktop",
+        "mcp/filesystem",
+        "/projects"
+      ],
+      "env": {},
+      "description": "Secure containerized file system operations"
+    },
+    "everything": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mcp/everything"
+      ],
+      "env": {},
+      "description": "Complete MCP protocol test server with all features (Docker-based)"
+    },
+    "fetch": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mcp/fetch"
+      ],
+      "env": {},
+      "description": "Web content fetching and HTML to markdown conversion (Docker-based)"
+    },
+    "playwright": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mcp/playwright"
+      ],
+      "env": {},
+      "description": "Browser automation with Playwright (Docker-based)"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {},
+      "description": "Enhanced reasoning and step-by-step thinking (NPX - official MCP package)"
+    }
+  }
+}

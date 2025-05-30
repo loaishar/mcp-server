@@ -1,0 +1,22 @@
+{
+  "name": "unified-mcp-server",
+  "version": "2.0.0",
+  "description": "Unified MCP Server with Node.js proxy capabilities",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "docker",
+    "unified-server",
+    "git",
+    "memory"
+  ],
+  "author": "MCP Server Team",
+  "license": "MIT"
+}
