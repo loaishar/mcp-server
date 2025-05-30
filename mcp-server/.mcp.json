@@ -11,6 +11,84 @@
       "args": ["-y", "@modelcontextprotocol/server-memory"],
       "env": {},
       "description": "Persistent memory for conversations"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {},
+      "description": "Enhanced reasoning and step-by-step thinking"
+    },
+    "playwright": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/playwright"],
+      "env": {},
+      "description": "Browser automation with Playwright (Docker-based)"
+    },
+    "filesystem": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "--mount", "type=bind,src=C:\\Users\\loai1\\OneDrive\\Documents\\GitHub\\mcp-server,dst=/projects/mcp-server",
+        "--mount", "type=bind,src=C:\\Users\\loai1\\OneDrive\\Documents,dst=/projects/Documents",
+        "--mount", "type=bind,src=C:\\Users\\loai1\\Desktop,dst=/projects/Desktop",
+        "mcp/filesystem", "/projects"
+      ],
+      "env": {},
+      "description": "Secure containerized file system operations"
+    },
+    "fetch": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/fetch"],
+      "env": {},
+      "description": "Web content fetching and HTML to markdown conversion"
+    },
+    "everything": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/everything"],
+      "env": {},
+      "description": "Complete MCP protocol test server with all features"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "$env:SUPABASE_ACCESS_TOKEN"
+      },
+      "description": "Supabase database and auth operations"
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "$env:GITHUB_PERSONAL_ACCESS_TOKEN"
+      },
+      "description": "GitHub repository and issue management"
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-mcp"],
+      "env": {
+        "FIGMA_API_KEY": "$env:FIGMA_API_KEY"
+      },
+      "description": "Figma design file access and manipulation"
+    },
+    "hyperbrowser": {
+      "command": "npx",
+      "args": ["-y", "hyperbrowser-mcp"],
+      "env": {
+        "HYPERBROWSER_API_KEY": "$env:HYPERBROWSER_API_KEY"
+      },
+      "description": "Advanced web browsing and scraping"
+    },
+    "neon": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.neon.tech/sse"],
+      "env": {},
+      "description": "Neon database operations"
     }
   }
 }
