@@ -55,16 +55,26 @@
         "run",
         "-i",
         "--rm",
-        "mcp/playwright"
+        "--init",
+        "--pull=always",
+        "mcr.microsoft.com/playwright/mcp"
       ],
       "env": {},
-      "description": "Browser automation with Playwright (Docker-based)"
+      "description": "Official Microsoft Playwright MCP server (headless chromium)"
     },
     "sequential-thinking": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "env": {},
       "description": "Enhanced reasoning and step-by-step thinking (NPX - official MCP package)"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_a75051a54209b1840eeeef812906a947c99f77fe"
+      },
+      "description": "Supabase database and auth operations"
     },
     "time": {
       "command": "docker",

@@ -20,9 +20,9 @@
     },
     "playwright": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "mcp/playwright"],
+      "args": ["run", "-i", "--rm", "--init", "--pull=always", "mcr.microsoft.com/playwright/mcp"],
       "env": {},
-      "description": "Browser automation with Playwright (Docker-based)"
+      "description": "Official Microsoft Playwright MCP server (headless chromium)"
     },
     "filesystem": {
       "command": "docker",
