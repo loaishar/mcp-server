@@ -7,10 +7,10 @@
       "description": "Git operations and repository management"
     },
     "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "command": "docker",
+      "args": ["run", "-i", "-v", "claude-memory:/app/dist", "--rm", "mcp/memory"],
       "env": {},
-      "description": "Persistent memory for conversations"
+      "description": "Knowledge Graph Memory Server - Persistent memory using local knowledge graph (Docker-based)"
     },
     "sequential-thinking": {
       "command": "npx",
@@ -89,6 +89,26 @@
       "args": ["-y", "mcp-remote", "https://mcp.neon.tech/sse"],
       "env": {},
       "description": "Neon database operations"
+    },
+    "time": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/time"],
+      "env": {},
+      "description": "Time and timezone conversion capabilities (Docker-based)"
+    },
+    "browserbase": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "BROWSERBASE_API_KEY",
+        "-e", "BROWSERBASE_PROJECT_ID",
+        "mcp/browserbase"
+      ],
+      "env": {
+        "BROWSERBASE_API_KEY": "$env:BROWSERBASE_API_KEY",
+        "BROWSERBASE_PROJECT_ID": "$env:BROWSERBASE_PROJECT_ID"
+      },
+      "description": "Cloud-based browser automation with Browserbase (Docker - requires API credentials)"
     }
   }
 }

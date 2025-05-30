@@ -6,6 +6,12 @@
       "env": {},
       "description": "Unified MCP server with Git and Memory (Docker-based, tested and working)"
     },
+    "memory": {
+      "command": "docker",
+      "args": ["run", "-i", "-v", "claude-memory:/app/dist", "--rm", "mcp/memory"],
+      "env": {},
+      "description": "Knowledge Graph Memory Server - Persistent memory using local knowledge graph (Docker-based)"
+    },
     "filesystem": {
       "command": "docker",
       "args": [
@@ -59,6 +65,26 @@
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "env": {},
       "description": "Enhanced reasoning and step-by-step thinking (NPX - official MCP package)"
+    },
+    "time": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/time"],
+      "env": {},
+      "description": "Time and timezone conversion capabilities (Docker-based)"
+    },
+    "browserbase": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "BROWSERBASE_API_KEY",
+        "-e", "BROWSERBASE_PROJECT_ID",
+        "mcp/browserbase"
+      ],
+      "env": {
+        "BROWSERBASE_API_KEY": "",
+        "BROWSERBASE_PROJECT_ID": ""
+      },
+      "description": "Cloud-based browser automation with Browserbase (Docker - requires API credentials)"
     }
   }
 }
