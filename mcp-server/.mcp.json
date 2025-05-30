@@ -109,6 +109,15 @@
         "BROWSERBASE_PROJECT_ID": "$env:BROWSERBASE_PROJECT_ID"
       },
       "description": "Cloud-based browser automation with Browserbase (Docker - requires API credentials)"
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@sentry/mcp-server@latest"],
+      "env": {
+        "SENTRY_ACCESS_TOKEN": "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",
+        "SENTRY_HOST": "https://sentry.io"
+      },
+      "description": "Sentry error monitoring and debugging (requires access token)"
     }
   }
 }
